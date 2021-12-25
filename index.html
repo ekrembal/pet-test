@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Card</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<style>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+</style>
+</head>
+<body> 
+<div id="app">
+<div class="container">
+  <h2>Basic Card</h2>
+  <transition name="fade">
+  <div v-if="showCard" class="card" style="width: 18rem;">
+  <img class="card-img-top" :src="curQuestion.img" alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{curQuestion["text"]}}</h5>
+      <fieldset class="form-group">
+
+            <div v-for="(option, index) in curQuestion.options" class="form-check">
+          <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" :value="index" @input="handleInput">
+          <label class="form-check-label" for="gridRadios1">
+            {{option.text}}
+          </label>
+        </div>
+    </fieldset>
+    <a v-on:click="devam" class="btn btn-primary">Devam</a>
+  </div>
+</div>
+</transition>
+
+
+<div v-if="questionsFinished">
+    <h2>Test Finished</h2>
+    <div class="row">
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" :src="bestKopek.img" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{bestKopek["name"]}}</h5>
+          <p class="card-text">{{bestKopek.description}}</p>
+        </div>
+      </div>
+
+
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" :src="bestKedi.img" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{bestKedi["name"]}}</h5>
+          <p class="card-text">{{bestKedi.description}}</p>
+        </div>
+      </div>
+    </div>
+
+
+</div>
+</div>
+</div>
+
+<script>
+// import questionsJson from './questions.json'
+// alert(questionsJson);
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue!',
+    questionsFinished: false,
+    curEffect:{
+                  "1":0,
+                  "2":0,
+                  "3":0,
+                  "4":0,
+                  "5":0,
+                  "6":0,
+                  "7":0,
+                  "8":0,
+               },
+    totalEffect:{
+                  "1":0,
+                  "2":0,
+                  "3":0,
+                  "4":0,
+                  "5":0,
+                  "6":0,
+                  "7":0,
+                  "8":0,
+               },
+    questions: [
+    {
+       "id":1,
+       "text":"Nasıl bir evde yaşıyorsunuz?",
+       "img":"https://q4g9y5a8.rocketcdn.me/wp-content/uploads/2020/02/home-banner-2020-02-min.jpg",
+       "options":[
+          {
+             "text":"Müstakil",
+             "effect":{
+                "1":3,
+                "2":1,
+                "3":2.5,
+                "4":5,
+                "5":2,
+                "6":1
+             }
+          },
+          {
+             "text":"Apartman",
+             "effect":{
+                "2":4.5,
+                "5":1.2,
+                "6":1.2,
+                "7":3,
+                "8":4
+             }
+          }
+       ]
+    },
+    {
+       "id":2,
+       "text":"Yaşadığınız evin boyutunu nasıl tanımlarsınız?",
+       "img":"https://prefabrik.com/wp-content/uploads/2020/08/28-m2-Prefabrik-Ev-2.jpg",
+       "options":[
+          {
+             "text":"Büyük",
+             "effect":{
+                "1":5,
+                "2":2,
+                "3":4.5,
+                "4":4,
+                "5":3,
+                "6":2,
+                "7":3,
+                "8":3
+             }
+          },
+          {
+             "text":"Orta",
+             "effect":{
+                "1":0,
+                "2":3,
+                "3":0,
+                "4":0,
+                "5":2,
+                "6":3,
+                "7":3,
+                "8":3
+             }
+          },
+          {
+             "text":"Küçük",
+             "effect":{
+                "1":0,
+                "2":0,
+                "3":0,
+                "4":0,
+                "5":2,
+                "6":3,
+                "7":5,
+                "8":5
+             }
+          }
+       ]
+    },
+    {
+       "id":3,
+       "text":"Tüylü petlerden hoşlanır mısınız?",
+       "img":"https://images.petlebi.com/v7/ptlb/up/gallery/pekingese-9830.jpg",
+       "options":[
+          {
+             "text":"Eveett, bayılırım!",
+             "effect":{
+                "1":3,
+                "2":0,
+                "3":2,
+                "4":0,
+                "5":2,
+                "6":1,
+                "7":4,
+                "8":2
+             }
+          },
+          {
+             "text":"Biraz olsun çok tüylü sevmem.",
+             "effect":{
+                "1":2,
+                "2":0,
+                "3":2,
+                "4":3,
+                "5":3,
+                "6":3,
+                "7":1,
+                "8":2
+             }
+          },
+          {
+             "text":"Malesef tüylü olmamasını tercih ederim.",
+             "effect":{
+                "1":0,
+                "2":5,
+                "3":0,
+                "4":0,
+                "5":1,
+                "6":2,
+                "7":0,
+                "8":3
+             }
+          }
+       ]
+    },
+    {
+       "id":4,
+       "text":"Bahçeniz var mı, eğer varsa pet beslemek için uygun mu?",
+       "img":"https://www.evguzar.com/upload/resimler/bahce-duzenleme.jpg",
+       "options":[
+          {
+             "text":"Evet kendimize özel bir bahçe var ve petimi güvenle çıkartabilirim.",
+             "effect":{
+                "1":4,
+                "2":3,
+                "3":4,
+                "4":5,
+                "5":2,
+                "6":2,
+                "7":0,
+                "8":0
+             }
+          },
+          {
+             "text":"Bir bahçem var ancak ortak kullanım olduğu için petim için biraz riskli.",
+             "effect":{
+                "1":3,
+                "2":2,
+                "3":3,
+                "4":2,
+                "5":1,
+                "6":1,
+                "7":0,
+                "8":0
+             }
+          },
+          {
+             "text":"Malesef bahçem yok.",
+             "effect":{
+                "1":0,
+                "2":4,
+                "3":0,
+                "4":0,
+                "5":0,
+                "6":0,
+                "7":0,
+                "8":0
+             }
+          }
+       ]
+    },
+    {
+       "id":5,
+       "text":"Petinizle bir günde ortalama ne kadar ilgilenebilirsiniz?",
+       "img":"https://storage.googleapis.com/petbacker/images/blog/2018/pet-care-dog-sitting-services.jpg",
+       "options":[
+          {
+             "text":"Neredeyse bütün gün evdeyim ve petimle ilgilenebilirim.",
+             "effect":{
+                "1":5,
+                "2":3,
+                "3":5,
+                "4":4,
+                "5":4,
+                "6":5,
+                "7":3,
+                "8":3
+             }
+          },
+          {
+             "text":"Akşam mesai sonrası eve geliyorum ve yaklaşık 2 3 saat ilgilenebilirim.",
+             "effect":{
+                "1":0,
+                "2":4,
+                "3":0,
+                "4":2,
+                "5":3,
+                "6":2,
+                "7":4,
+                "8":4
+             }
+          },
+          {
+             "text":"Geceleri genelde dışarda oluyorum bu nedenle çok az ilgilenebilirim.",
+             "effect":{
+                "1":0,
+                "2":2,
+                "3":0,
+                "4":0,
+                "5":1,
+                "6":2,
+                "7":5,
+                "8":4
+             }
+          }
+       ]
+    },
+    {
+       "id":6,
+       "text":"Petinizin itaatkar ve eğitime açık olması sizin için ne kadar önemli?",
+       "img":"https://seyler.ekstat.com/img/max/800/n/ndL0pRecrlUhAcpp-636517005946356020.jpg",
+       "options":[
+          {
+             "text":"Asla sözümden çıkmamalı ve rahatça eğitebilmeliyim.",
+             "effect":{
+                "1":3,
+                "2":0,
+                "3":4,
+                "4":5,
+                "5":0,
+                "6":0,
+                "7":0,
+                "8":0
+             }
+          },
+          {
+             "text":"Bazı önemli yasakları öğretebilmem yeterli.",
+             "effect":{
+                "1":5,
+                "2":0,
+                "3":5,
+                "4":2,
+                "5":0,
+                "6":0,
+                "7":0,
+                "8":0
+             }
+          },
+          {
+             "text":"O kendi dünyasında yaşasın ben ona hizmet edeyim.",
+             "effect":{
+                "1":0,
+                "2":3,
+                "3":0,
+                "4":0,
+                "5":5,
+                "6":4,
+                "7":4,
+                "8":3
+             }
+          }
+       ]
+    },
+    {
+       "id":7,
+       "text":"Hayalinizdeki petin karakterini bir kelime ile tanımlar mısınız?",
+       "img":"https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/cute-cat-photos-1593441022.jpg",
+       "options":[
+          {
+             "text":"Şirin",
+             "effect":{
+                "1":4,
+                "2":0,
+                "3":3,
+                "4":0,
+                "5":3,
+                "6":4,
+                "7":5,
+                "8":2
+             }
+          },
+          {
+             "text":"Oyuncu",
+             "effect":{
+                "1":5,
+                "2":0,
+                "3":5,
+                "4":0,
+                "5":4,
+                "6":5,
+                "7":3,
+                "8":2
+             }
+          },
+          {
+             "text":"Vahşi",
+             "effect":{
+                "1":0,
+                "2":0,
+                "3":0,
+                "4":5,
+                "5":3,
+                "6":2,
+                "7":0,
+                "8":4
+             }
+          },
+          {
+             "text":"Tembel",
+             "effect":{
+                "1":3,
+                "2":5,
+                "3":0,
+                "4":0,
+                "5":2,
+                "6":2,
+                "7":4,
+                "8":0
+             }
+          }
+       ]
+    }
+ ],
+    showCard: false,
+    selected: '',
+    curCardIndex:0,
+    bestKopek:0,
+    bestKedi:0,
+    pets:[
+      {
+         "id":1,
+         "name":"Golden",
+         "description":"Dünyanın en sevecen köpeklerinin başında gelen Golden Retriever, oldukça sıcak ve agresif olmayan bir ırktır. Saldırgan tavırlar göstermek şöyle dursun sabırlarıyla nam salmışlardır. Rehber ve terapi köpekliği yapacak kadar insanlara yakın bir cins olan Golden Retriever, yabancılarla ve diğer evcillerle de çok iyi geçinirler. Son derece itaatkardırlar ve tek hedefleri sahiplerini memnun ederek onların sevgilerini kazanmaktır.",
+         "img":"https://www.petihtiyac.com/Data/EditorFiles/petihtiyac_golden_bakimi.jpg",
+         "sahibinden_urls":[
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kopek-golden-setter-avusturya-tazisi-kirma-kizimiza-yuva-971285361/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kopek-sevimli-kopegimiz-prensese-bahceli-yuva-ariyoruz-981445130/detay"
+         ],
+         "insurance":297
+      },
+      {
+         "id":2,
+         "name":"Pug",
+         "description":"Basık yüzü ile Bulldogları andıran Puglar, onların minyatürü gibidir. Minik bedeni, ince bacakları, siyah burnu ve koyu renk boncuk gözleri ile köpek severlerin gözdesi olan Puglar, Bulldoglar gibi sakin ve tembelliğe meyilli yaratıklardır. Pug cinsi köpeklerin bakımı kolay değildir ve sahiplerinden fazlaca ilgi ile sevgi beklerler. Fakat bunun karşılığını da sonsuz sevgileri ile hakkıyla verirler. Biraz inatçı olsalar da eğitim almaya yatkın olan bu ırk, son derece sevecen ve şefkatlidir.",
+         "img":"https://1kedi1kopek.com//files/ilan/pug60a79f17d93aa.jpg",
+         "sahibinden_urls":[
+            
+         ],
+         "insurance":281
+      },
+      {
+         "id":3,
+         "name":"Labrador",
+         "description":"Labrador Retriever köpek ırkı, arkadaş canlısı ve cana yakın olması ile ünlüdür. Labrador Retriever cinsi, Golden Retriever gibi insanlara hizmet etmekten keyif alır. Sevgi gösterme konusunda çok cömert olmaları onların sahiplerinden ilgi görme arzularını da kamçılar. Ailenin bir üyesi olmaya hemen adapte olan bu köpekler, Goldenlar kadar zekidirler.",
+         "img":"https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/labrador-puppy-royalty-free-image-1626252338.jpg",
+         "sahibinden_urls":[
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kopek-omurluk-yuva-ariyoruz-975640445/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kopek-karam-oglum-980818287/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kopek-selena-pamuk-gibi-beyaz-genc-kiz-yuvasini-ariyor-979775705/detay"
+         ],
+         "insurance":276
+      },
+      {
+         "id":4,
+         "name":"Kangal",
+         "description":"Kangal, sağlam yapılı, dayanıklı ve hızlıdır. İyi huyludur ve saldırganlık göstermeksizin cesurdur. Sahiplerine karşı yaşamları boyunca sadık ve sevecen davranırlar. Yetişkin olduklarında ise yabancılara güvenmezler.",
+         "img":"https://blog.juenpetmarket.com/wp-content/uploads/2020/01/kangal-kopegi-ozellikleri-1-e1580401527714.jpg",
+         "sahibinden_urls":[
+            
+         ],
+         "insurance":349
+      },
+      {
+         "id":5,
+         "name":"Tekir",
+         "description":"Tekir kediler diğer kediler gibi günde en az 16 saat uyumaktadır. Geri kalan vakitlerinde kedi oyuncaklarıyla oynamaya bayılırlar. Hatta siz oynamayı hiç bırakmazsanız onlar da bırakmazlar. Yavruyken evcilleştirilmeniz, eğitim alma konusunda da işinizi kolaylaştırır. Tekir kediler eve oldukça kolay adapte olabilen bir türdür. Genellikle evde yalnız kalmaktan pek hoşlanmazlar. Tekir kediler diğer kedilere oranla daha hareketli ve enerjik bir karakter yapısına sahiptir.",
+         "img":"https://blog.petibom.com/wp-content/uploads/2021/09/tekir-kedisi.jpg",
+         "sahibinden_urls":[
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-eger-sahiplenilmezse-sokaga-atilacak-cok-acil-yuva-986214742/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-sokaga-atilacak-acil-yuva-scottish-olsaydi-begenirdiniz-986210828/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-minnos-a-omurluk-yuva-986206494/detay"
+         ],
+         "insurance":219
+      },
+      {
+         "id":6,
+         "name":"Sarman",
+         "description":"Sarman kediler, çok uysal ve sakin hayvanlar olsalar da oyun oynamayı severler. Oyun oynadıkları zamanlarda çok hareketlidirler fakat uykuya da düşkündürler. Tekirlere göre daha uykucu ve daha az enerjiklerdir. Sahiplerine çok bağlı olmalarına karşı zaman zaman yalnız kalmaktan da hoşlanırlar. Kucak kedisi olarak bilinseler de onlarla sürekli fiziksel temas kurmanız pek de mümkün değildir. Her gün size kendisini sevdirmek isteyecektir ama bunun her an olmasından bunalabilirler. Günün belli saatlerinde ortadan kaybolup bunu bir alışkanlığa çevirmeleri de çok olasıdır. Ortalarda gözükmediği zamanlarda telaşlanmayın. Bu hareketi gürültüsüz ve sakin bir yerde rahat bir uyku çekmek için yaparlar. Zaten dinlenme saatleri dışında her an sizin yanında olacaklardır.",
+         "img":"https://lh3.googleusercontent.com/proxy/HWT8ggXSqIVX2h9maV1oJT3IT4N90hy-Yu_S1j00KlDDc3AYNBk0c4ncblq1twfWSFVhGTvxNkzMSeCAqagCDiU_QG1EmkaSmpcbOm6SEorS_5-fG6w3E0v7eiu7",
+         "sahibinden_urls":[
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-pasa-ya-omurluk-yuva-986205261/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-8-aylik-bahcede-baktigimiz-kedimizi-sahiplendirmek-istiyoruz-986175007/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-portakalli-kurabiye-986175871/detay"
+         ],
+         "insurance":225
+      },
+      {
+         "id":7,
+         "name":"Smokin",
+         "description":"Meraklı, bağımsız ve sıcak kanlıdır. Uzun süre evde yalnız kalma ile ilgili problemi yoktur. Ses çıkarma konusunda orta düzeyde bir kedidir. Akşam eve gelene kadar sizi bekler. Gelir gelmezde kuyruğu dik bir şekilde sizi sevgi ile karşılar. Biraz sevgi gösterir ve ortalıktan yok olur. Eğer aşırı ilgi göstermek ve aşırı ilgi görmek istemiyorsanız smokin-tuxedo kedisi tam sizin için.",
+         "img":"https://ajanimo.com/wp-content/uploads/2021/11/dahi-dosto-smokin-kediler.jpg",
+         "sahibinden_urls":[
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-citir-kurabiye-986146406/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-sirin-cocuklar-986143836/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-cuce-kizima-guzel-bir-yuva-ariyorum-980910933/detay"
+         ],
+         "insurance":216
+      },
+      {
+         "id":8,
+         "name":"Bombay",
+         "description":"Bombay kedisi çekingen ve içe kapanık karakter özellikleriyle anılmaktadır. Yaşadığı eve ve ailesine alışma sürecini atlattıktan sonra son derece sevgi dolu, oyuncu yapıya bürünseler de zamanlarının çoğunu kendi kendine geçirmeleriyle de bilinirler.",
+         "img":"https://blog.petibom.com/wp-content/uploads/2021/09/bombay-kedi.jpg",
+         "sahibinden_urls":[
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-kara-bocuk-acil-yuva-ariyor-986042587/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-chanel-yuva-ariyor-985900144/detay",
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-komur-ogluma-yuva-985890631/detay"
+         ],
+         "insurance":229
+      }
+   ],
+  },
+  created: function () {
+    this.curQuestion = this.questions[0];
+    setTimeout(() => {this.showCard = true;}, 0);
+  },
+  methods: {
+      endTest: function(){
+            this.showCard = false;
+            this.questionsFinished = true;
+
+            var kopek = [this.totalEffect["1"],this.totalEffect["2"],this.totalEffect["3"],this.totalEffect["4"]];
+            var kedi = [this.totalEffect["5"],this.totalEffect["6"],this.totalEffect["7"],this.totalEffect["8"]];
+            var indexOfKopek = kopek.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+            var indexOfKedi = 4 + kedi.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+            console.log(indexOfKopek);
+            console.log(indexOfKedi);
+
+            this.bestKopek = this.pets[indexOfKopek];
+            this.bestKedi = this.pets[indexOfKedi];
+
+
+      },
+      devam: function(){
+        this.showCard = false;
+        // add curEffect to totalEffect
+        for (var key in this.curEffect) {
+          this.totalEffect[key] += this.curEffect[key];
+        }
+        this.curEffect = {"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0};
+        this.curCardIndex += 1;
+        if(this.curCardIndex < this.questions.length){
+          this.curQuestion = this.questions[this.curCardIndex];
+          setTimeout(() => {this.showCard = true;}, 0);
+        } else{
+            this.endTest();
+            // alert('Sınav bitti');
+        }
+
+        // console.log(JSON.parse(JSON.stringify(this.totalEffect)));
+        // setTimeout(() => {this.showCard = true;}, 0);
+      },
+      handleInput: function(e){
+        this.curEffect = (JSON.parse(JSON.stringify(this.curQuestion.options[e.target.value]["effect"])));
+        //   this.curQuestion.options[e.target.value]["effect"].forEach((value, key) => {
+        //     this.curEffect[key] = value;
+        //   });
+        console.log(JSON.parse(JSON.stringify(this.curEffect)));
+        //   this.curEffect.forEach((value, key) => {
+        //       console.log(key + " " + value);
+        //   });
+        //   alert(e.target.value);
+      }
+  }
+})
+</script>
+</body>
+</html>
