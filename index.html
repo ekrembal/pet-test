@@ -31,9 +31,12 @@ html, body {
     -webkit-background-size: 100% 100%;
     background-size:cover;
     /* Center this div */
-    padding-top: 100px;
+    padding-top: 10px;
     
     }
+    h2 {
+  color:white;
+}
 </style>
 </head>
 <body> 
@@ -42,10 +45,12 @@ html, body {
    <!-- <button class="flex justify-between  lg:w-5/12 max-h-devamEt items-center bg-melon round mt-8 mb-8 sm:mt-4 md:mt-8" style="border-radius: 50px; min-width: 190px; height: 70px;"><div><p class="text-white  whitespace-nowrap font-bold text-1xl pl-6">Devam Et</p></div><div class="h-full flex flex-col justify-center items-center bg-white rounded-full overflow-hidden" style="width: 55px; height: 55px;"><div style="transform: translateX(-10px) scale(0.8);"><img src="/static/media/icon-arrow-right-orange-light.5ca54cba.svg" alt="arrow"></div></div></button> -->
 
 
-<div class="container col-6">
+<div class="container">
+   <div class="row justify-content-md-center">
+      <div v-if="!questionsFinished" class="col-md-auto">
    <h2>Hangi Peti Sahiplenmeliyim?</h2>
   <transition name="fade">
-  <div v-if="showCard" class="card" style="width: 30rem;">
+  <div v-if="showCard" class="card" style="max-width: 30rem;">
   <img class="card-img-top" :src="curQuestion.img" alt="Card image cap">
   <div class="card-body">
     <h5 class="card-title">{{curQuestion["text"]}}</h5>
@@ -58,13 +63,14 @@ html, body {
           </label>
         </div>
     </fieldset>
-    <a v-on:click="devam" class="btn btn-primary">Devam</a>
+    <a v-on:click="devam" class="btn btn-primary rounded-pill" style="background-color: #ff7258;border-style: none;">Devam Et</a>
   </div>
 </div>
 </transition>
+</div>
 
 
-<div v-if="questionsFinished">
+<div v-if="questionsFinished" class="col-md-auto">
    <h2>İşte Sonuçlar</h2>
     <div class="row">
     <div class="card" style="width: 18rem;">
@@ -72,6 +78,7 @@ html, body {
         <div class="card-body">
           <h5 class="card-title">{{bestKopek["name"]}}</h5>
           <p class="card-text">{{bestKopek.description}}</p>
+          <a  data-toggle="modal" data-target="#myModal" class="btn btn-primary rounded-pill" style="background-color: #ff7258;border-style: none;">Sahiplen</a>
         </div>
       </div>
 
@@ -81,6 +88,7 @@ html, body {
         <div class="card-body">
           <h5 class="card-title">{{bestKedi["name"]}}</h5>
           <p class="card-text">{{bestKedi.description}}</p>
+          <a  data-toggle="kediModal" data-target="#kediModal"  v-on:click="openKediModal" class="btn btn-primary rounded-pill" style="background-color: #ff7258;border-style: none;">Sahiplen</a>
         </div>
       </div>
     </div>
@@ -88,6 +96,32 @@ html, body {
 
 </div>
 </div>
+</div>
+
+<div class="modal fade" id="myModal" role="dialog">
+<div class="modal-dialog">
+   <div class="modal-content">
+      <div class="modal-body">
+      <p><br>Juno üzerinden <b>{{bestKopek["name"]}}</b> köpeğine özel yıllık <b>{{bestKopek.insurance}} TL</b>'den sigortalatmak için hemen tıkla!<p>
+         <a target="_blank" href="https://junolu.com/urun/patisine-saglik"><img src="https://junolu.com/static/media/logo-black.7090dd2c.svg"></a></h3>  
+      </div>
+   </div>
+</div>
+</div>
+
+
+<div class="modal fade" id="kediModal" role="dialog">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-body">
+         <p><br>Juno üzerinden <b>{{bestKopek["name"]}}</b> köpeğine özel yıllık <b>{{bestKopek.insurance}} TL</b>'den sigortalatmak için hemen tıkla!<p>
+            <a target="_blank" href="https://junolu.com/urun/patisine-saglik"><img src="https://junolu.com/static/media/logo-black.7090dd2c.svg"></a></h3>  
+         </div>
+      </div>
+   </div>
+   </div>
+
+
 </div>
 
 <script>
@@ -540,6 +574,7 @@ var app = new Vue({
   created: function () {
     this.curQuestion = this.questions[0];
     setTimeout(() => {this.showCard = true;}, 0);
+    this.endTest();
   },
   methods: {
       endTest: function(){
@@ -587,6 +622,12 @@ var app = new Vue({
         //       console.log(key + " " + value);
         //   });
         //   alert(e.target.value);
+      },
+      kopekSahiplen: function() {
+
+      },
+      openKediModal: function(){
+
       }
   }
 })
