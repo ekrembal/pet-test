@@ -104,7 +104,7 @@ html, body {
       <div class="modal-body">
          <h5>Sizin için bulduğumuz sahiplenebileceğiniz yerler:</h5>
          <div class="list-group">
-            <a  v-for="link in bestKopek.sahibinden_urls" :href="link" target="_blank" class="list-group-item list-group-item-action">sahibinden.com</a>
+            <a  v-for="link in bestKopek.sahibinden_urls" :href="link" target="_blank" class="list-group-item list-group-item-action"><img style="width:16px;height:16px;" src="https://www.sahibinden.com/favicon.ico">sahibinden.com</a>
          </div>
 
       <p><br>Juno üzerinden <b>{{bestKopek["name"]}}</b> köpeğine özel yıllık <b>{{bestKopek.insurance}} TL</b>'den sigortalatmak için hemen tıkla!<p>
@@ -121,7 +121,7 @@ html, body {
          <div class="modal-body">
             <h5>Sizin için bulduğumuz sahiplenebileceğiniz yerler:</h5>
             <div class="list-group">
-               <a  v-for="link in bestKedi.sahibinden_urls" :href="link" target="_blank" class="list-group-item list-group-item-action">sahibinden.com</a>
+               <a  v-for="link in bestKedi.sahibinden_urls" :href="link" target="_blank" class="list-group-item list-group-item-action"> <img style="width:16px;height:16px;" src="https://www.sahibinden.com/favicon.ico"> sahibinden.com</a>
             </div>
             <!-- <a v-for="link in bestKedi.sahibinden_urls" href="{{link}}">Sahiplen</a> -->
             <p><br>Juno üzerinden <b>{{bestKedi["name"]}}</b> kedine özel yıllık <b>{{bestKedi.insurance}} TL</b>'den sigortalatmak için hemen tıkla!<p>
