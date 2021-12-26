@@ -78,7 +78,7 @@ html, body {
         <div class="card-body">
           <h5 class="card-title">{{bestKopek["name"]}}</h5>
           <p class="card-text">{{bestKopek.description}}</p>
-          <a  data-toggle="modal" data-target="#myModal" class="btn btn-primary rounded-pill" style="background-color: #ff7258;border-style: none;">Sahiplen</a>
+          <a  data-toggle="modal" data-target="#myModal" class="btn btn-primary rounded-pill" style="background-color: #ff7258;border-style: none;">Sahiplen & Sigortala</a>
         </div>
       </div>
 
@@ -88,7 +88,7 @@ html, body {
         <div class="card-body">
           <h5 class="card-title">{{bestKedi["name"]}}</h5>
           <p class="card-text">{{bestKedi.description}}</p>
-          <a  data-toggle="kediModal" data-target="#kediModal"  v-on:click="openKediModal" class="btn btn-primary rounded-pill" style="background-color: #ff7258;border-style: none;">Sahiplen</a>
+          <a  data-toggle="modal" data-target="#kediModal" class="btn btn-primary rounded-pill" style="background-color: #ff7258;border-style: none;">Sahiplen & Sigortala</a>
         </div>
       </div>
     </div>
@@ -98,10 +98,15 @@ html, body {
 </div>
 </div>
 
-<div class="modal fade" id="myModal" role="dialog">
+<div class="modal fade" id="myModal">
 <div class="modal-dialog">
    <div class="modal-content">
       <div class="modal-body">
+         <h5>Sizin için bulduğumuz sahiplenebileceğiniz yerler:</h5>
+         <div class="list-group">
+            <a  v-for="link in bestKopek.sahibinden_urls" :href="link" target="_blank" class="list-group-item list-group-item-action">sahibinden.com</a>
+         </div>
+
       <p><br>Juno üzerinden <b>{{bestKopek["name"]}}</b> köpeğine özel yıllık <b>{{bestKopek.insurance}} TL</b>'den sigortalatmak için hemen tıkla!<p>
          <a target="_blank" href="https://junolu.com/urun/patisine-saglik"><img src="https://junolu.com/static/media/logo-black.7090dd2c.svg"></a></h3>  
       </div>
@@ -110,14 +115,19 @@ html, body {
 </div>
 
 
-<div class="modal fade" id="kediModal" role="dialog">
+<div class="modal fade" id="kediModal">
    <div class="modal-dialog">
       <div class="modal-content">
          <div class="modal-body">
-         <p><br>Juno üzerinden <b>{{bestKopek["name"]}}</b> köpeğine özel yıllık <b>{{bestKopek.insurance}} TL</b>'den sigortalatmak için hemen tıkla!<p>
-            <a target="_blank" href="https://junolu.com/urun/patisine-saglik"><img src="https://junolu.com/static/media/logo-black.7090dd2c.svg"></a></h3>  
-         </div>
+            <h5>Sizin için bulduğumuz sahiplenebileceğiniz yerler:</h5>
+            <div class="list-group">
+               <a  v-for="link in bestKedi.sahibinden_urls" :href="link" target="_blank" class="list-group-item list-group-item-action">sahibinden.com</a>
+            </div>
+            <!-- <a v-for="link in bestKedi.sahibinden_urls" href="{{link}}">Sahiplen</a> -->
+            <p><br>Juno üzerinden <b>{{bestKedi["name"]}}</b> kedine özel yıllık <b>{{bestKedi.insurance}} TL</b>'den sigortalatmak için hemen tıkla!<p>
+               <a target="_blank" href="https://junolu.com/urun/patisine-saglik"><img src="https://junolu.com/static/media/logo-black.7090dd2c.svg"></a></h3>
       </div>
+   </div>
    </div>
    </div>
 
@@ -495,7 +505,7 @@ var app = new Vue({
          "description":"Basık yüzü ile Bulldogları andıran Puglar, onların minyatürü gibidir. Minik bedeni, ince bacakları, siyah burnu ve koyu renk boncuk gözleri ile köpek severlerin gözdesi olan Puglar, Bulldoglar gibi sakin ve tembelliğe meyilli yaratıklardır. Pug cinsi köpeklerin bakımı kolay değildir ve sahiplerinden fazlaca ilgi ile sevgi beklerler. Fakat bunun karşılığını da sonsuz sevgileri ile hakkıyla verirler. Biraz inatçı olsalar da eğitim almaya yatkın olan bu ırk, son derece sevecen ve şefkatlidir.",
          "img":"https://1kedi1kopek.com//files/ilan/pug60a79f17d93aa.jpg",
          "sahibinden_urls":[
-            
+            "https://sahibim.net/ucretsiz-sahiplendirme-9187"
          ],
          "insurance":281
       },
@@ -517,7 +527,7 @@ var app = new Vue({
          "description":"Kangal, sağlam yapılı, dayanıklı ve hızlıdır. İyi huyludur ve saldırganlık göstermeksizin cesurdur. Sahiplerine karşı yaşamları boyunca sadık ve sevecen davranırlar. Yetişkin olduklarında ise yabancılara güvenmezler.",
          "img":"https://blog.juenpetmarket.com/wp-content/uploads/2020/01/kangal-kopegi-ozellikleri-1-e1580401527714.jpg",
          "sahibinden_urls":[
-            
+            "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kopek-ucretsiz-bir-cift-kangal-karabas-kirmasi-yavru-979413945/detay"
          ],
          "insurance":349
       },
@@ -536,8 +546,8 @@ var app = new Vue({
       {
          "id":6,
          "name":"Sarman",
-         "description":"Sarman kediler, çok uysal ve sakin hayvanlar olsalar da oyun oynamayı severler. Oyun oynadıkları zamanlarda çok hareketlidirler fakat uykuya da düşkündürler. Tekirlere göre daha uykucu ve daha az enerjiklerdir. Sahiplerine çok bağlı olmalarına karşı zaman zaman yalnız kalmaktan da hoşlanırlar. Kucak kedisi olarak bilinseler de onlarla sürekli fiziksel temas kurmanız pek de mümkün değildir. Her gün size kendisini sevdirmek isteyecektir ama bunun her an olmasından bunalabilirler. Günün belli saatlerinde ortadan kaybolup bunu bir alışkanlığa çevirmeleri de çok olasıdır. Ortalarda gözükmediği zamanlarda telaşlanmayın. Bu hareketi gürültüsüz ve sakin bir yerde rahat bir uyku çekmek için yaparlar. Zaten dinlenme saatleri dışında her an sizin yanında olacaklardır.",
-         "img":"https://lh3.googleusercontent.com/proxy/HWT8ggXSqIVX2h9maV1oJT3IT4N90hy-Yu_S1j00KlDDc3AYNBk0c4ncblq1twfWSFVhGTvxNkzMSeCAqagCDiU_QG1EmkaSmpcbOm6SEorS_5-fG6w3E0v7eiu7",
+         "description":"Sarman kediler, çok uysal ve sakin hayvanlar olsalar da oyun oynamayı severler. Oyun oynadıkları zamanlarda çok hareketlidirler fakat uykuya da düşkündürler. Tekirlere göre daha uykucu ve daha az enerjiklerdir. Sahiplerine çok bağlı olmalarına karşı zaman zaman yalnız kalmaktan da hoşlanırlar. Kucak kedisi olarak bilinseler de onlarla sürekli fiziksel temas kurmanız pek de mümkün değildir. Günün belli saatlerinde ortadan kaybolup bunu bir alışkanlığa çevirmeleri de çok olasıdır. Bu hareketi gürültüsüz ve sakin bir yerde rahat bir uyku çekmek için yaparlar.",
+         "img":"https://blog.zoo.com.tr/wp-content/uploads/sarman-kedi-770x433.jpg",
          "sahibinden_urls":[
             "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-pasa-ya-omurluk-yuva-986205261/detay",
             "https://www.sahibinden.com/ilan/hayvanlar-alemi-evcil-hayvanlar-kedi-8-aylik-bahcede-baktigimiz-kedimizi-sahiplendirmek-istiyoruz-986175007/detay",
@@ -574,7 +584,7 @@ var app = new Vue({
   created: function () {
     this.curQuestion = this.questions[0];
     setTimeout(() => {this.showCard = true;}, 0);
-    this.endTest();
+   //  this.endTest();
   },
   methods: {
       endTest: function(){
@@ -594,7 +604,7 @@ var app = new Vue({
 
       },
       devam: function(){
-        this.showCard = false;
+         setTimeout(() => {this.showCard = false;}, 0);
         // add curEffect to totalEffect
         for (var key in this.curEffect) {
           this.totalEffect[key] += this.curEffect[key];
